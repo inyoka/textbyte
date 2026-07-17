@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}{{ assessment.title }} – Preview – TextByte{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-4">
+  <div>
+    <h2 class="fw-bold mb-0">{{ assessment.title }}</h2>
+    <small class="text-muted">
+      {{ assessment.questions | length }} question(s)
+      &bull; Created {{ assessment.created_at.strftime('%d %b %Y') }}
+    </small>
+  </div>
+  <div class="d-flex gap-2">
+    <form method="post"
+          action="{{ url_for('assessments.publish', assessment_id=assessment.id) }}">
+      {% if assessment.published %}
+        <button type="submit" class="btn btn-warning">
+          <i class="bi bi-eye-slash me-1"></i>Unpublish
+        </button>
+      {% else %}
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-broadcast me-1"></i>Publish
+        </button>
+      {% endif %}
+    </form>
+    <a href="{{ url_for('assessments.results', assessment_id=assessment.id) }}"
+       class="btn btn-outline-secondary">
+      <i class="bi bi-bar-chart me-1"></i>Results
+    </a>
+    <a href="{{ url_for('main.dashboard') }}" class="btn btn-link">
+      &larr; Dashboard
+    </a>
+  </div>
+</div>
+
+{% if assessment.published %}
+  <div class="alert alert-success">
+    <i class="bi bi-broadcast me-1"></i>
+    This assessment is <strong>published</strong> and visible to students.
+  </div>
+{% else %}
+  <div class="alert alert-secondary">
+    <i class="bi bi-file-earmark me-1"></i>
+    This assessment is a <strong>draft</strong> and not yet visible to students.
+  </div>
+{% endif %}
+
+<div class="card shadow-sm">
+  <div class="card-header bg-white fw-semibold">Questions</div>
+  <div class="list-group list-group-flush">
+    {% for q in assessment.questions %}
+      <div class="list-group-item">
+        <div class="d-flex justify-content-between">
+          <span class="fw-semibold">{{ loop.index }}. {{ q.text }}</span>
+          <span class="badge bg-secondary ms-2">{{ q.type | replace('_', ' ') | title }}</span>
+        </div>
+        {% if q.options %}
+          <ul class="mt-2 mb-1">
+            {% for opt in q.options %}
+              <li class="{% if opt == q.answer or (q.answer is iterable and opt in q.answer) %}text-success fw-semibold{% endif %}">
+                {{ opt }}
+                {% if opt == q.answer or (q.answer is iterable and opt in q.answer) %}
+                  <i class="bi bi-check-circle-fill text-success ms-1"></i>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted small mt-1 mb-0">
+            <em>Expected answer:</em> {{ q.answer }}
+          </p>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

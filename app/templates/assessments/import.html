@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Import Assessment – TextByte{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h2 class="fw-bold mb-4">
+      <i class="bi bi-upload me-2 text-primary"></i>Import Assessment
+    </h2>
+
+    {% if errors %}
+      <div class="alert alert-danger">
+        <strong>Please fix the following errors:</strong>
+        <ul class="mb-0 mt-2">
+          {% for err in errors %}
+            <li>{{ err }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="yaml_file" class="form-label fw-semibold">
+              YAML Assessment File
+            </label>
+            <input class="form-control" type="file" id="yaml_file"
+                   name="yaml_file" accept=".yaml,.yml" required>
+            <div class="form-text">
+              Upload a <code>.yaml</code> or <code>.yml</code> file containing
+              your assessment definition.
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-upload me-1"></i>Import
+          </button>
+          <a href="{{ url_for('main.dashboard') }}" class="btn btn-link">Cancel</a>
+        </form>
+      </div>
+    </div>
+
+    <!-- YAML format reference -->
+    <div class="card mt-4 shadow-sm">
+      <div class="card-header bg-light fw-semibold">
+        <i class="bi bi-file-earmark-code me-1"></i>YAML Format Reference
+      </div>
+      <div class="card-body">
+        <p class="text-muted small mb-2">Example with all supported question types:</p>
+        <pre class="bg-light p-3 rounded"><code>title: Network Test
+
+questions:
+  - type: single_choice
+    question: Which protocol securely transfers web pages?
+    options:
+      - HTTP
+      - HTTPS
+      - FTP
+      - SMTP
+    answer: HTTPS
+
+  - type: multi_choice
+    question: Which are transport-layer protocols?
+    options:
+      - TCP
+      - UDP
+      - HTTP
+      - IP
+    answer:
+      - TCP
+      - UDP
+
+  - type: short_answer
+    question: What does DNS stand for?
+    answer: Domain Name System</code></pre>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
