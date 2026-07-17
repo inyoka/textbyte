@@ -1,6 +1,7 @@
 """Application configuration."""
 
 import os
+import warnings
 
 
 class Config:
@@ -8,6 +9,14 @@ class Config:
 
     # Flask
     SECRET_KEY = os.environ.get("SECRET_KEY", "change-me-in-production")
+
+    def __init__(self):
+        if self.SECRET_KEY == "change-me-in-production":
+            warnings.warn(
+                "SECRET_KEY is set to the default insecure value. "
+                "Set the SECRET_KEY environment variable before deploying.",
+                stacklevel=2,
+            )
 
     # SQLAlchemy
     SQLALCHEMY_DATABASE_URI = os.environ.get(

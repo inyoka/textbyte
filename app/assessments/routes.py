@@ -2,6 +2,8 @@
 
 import csv
 import io
+import json
+import re
 
 import yaml
 from flask import (
@@ -130,20 +132,18 @@ def _grade_submission(submission):
         q = answer.question
         if q.type == "short_answer":
             answer.is_correct = None  # requires manual grading
+        elif q.type == "multi_choice":
+            correct = q.answer  # list
+            try:
+                student_answers = json.loads(answer.response or "[]")
+            except (json.JSONDecodeError, TypeError):
+                student_answers = []
+            answer.is_correct = sorted(str(s) for s in student_answers) == sorted(
+                str(c) for c in (correct if isinstance(correct, list) else [correct])
+            )
         else:
             correct = q.answer
-            if isinstance(correct, list):
-                student_answers = [
-                    a.strip()
-                    for a in (answer.response or "").split(",")
-                ]
-                answer.is_correct = sorted(student_answers) == sorted(
-                    str(c) for c in correct
-                )
-            else:
-                answer.is_correct = (answer.response or "").strip() == str(
-                    correct
-                ).strip()
+            answer.is_correct = (answer.response or "").strip() == str(correct).strip()
     db.session.commit()
 
 
@@ -299,7 +299,9 @@ def export_results(assessment_id):
         writer.writerow(row)
 
     output.seek(0)
-    filename = f"results_{assessment.title.replace(' ', '_')}.csv"
+    filename = "results_{}.csv".format(
+        re.sub(r"[^\w\-]", "_", assessment.title)
+    )
     return Response(
         output.getvalue(),
         mimetype="text/csv",
@@ -382,7 +384,7 @@ def take(assessment_id):
         for question in assessment.questions:
             if question.type == "multi_choice":
                 selected = request.form.getlist(f"q_{question.id}")
-                response = ",".join(selected)
+                response = json.dumps(selected)
             else:
                 response = request.form.get(f"q_{question.id}", "").strip()
             answer = Answer(
