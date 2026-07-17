@@ -85,7 +85,7 @@ def callback():
     """Handle the OAuth 2.0 redirect from Microsoft."""
     # Validate the state parameter to prevent CSRF
     if request.args.get("state") != session.get("auth_state"):
-        return render_template("auth/error.html", error="State mismatch – possible CSRF attack."), 400
+        return render_template("auth/error.html", error="State mismatch - possible CSRF attack."), 400
 
     if "error" in request.args:
         return render_template(

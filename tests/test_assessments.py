@@ -13,7 +13,7 @@ title: Sample Test
 
 questions:
   - type: single_choice
-    question: What colour is the sky?
+    question: What color is the sky?
     options:
       - Red
       - Blue
