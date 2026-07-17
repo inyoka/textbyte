@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Welcome – TextByte{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 text-center py-5">
+    <i class="bi bi-pencil-square display-1 text-primary"></i>
+    <h1 class="mt-3 fw-bold">TextByte</h1>
+    <p class="lead text-muted">
+      A simple online assessment platform for schools.
+      Teachers create tests offline; students complete them online.
+    </p>
+    <a href="{{ url_for('auth.login') }}"
+       class="btn btn-primary btn-lg mt-3">
+      <i class="bi bi-microsoft me-2"></i>Sign in with Microsoft
+    </a>
+  </div>
+</div>
+
+<div class="row g-4 mt-4">
+  <div class="col-md-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body text-center">
+        <i class="bi bi-file-earmark-code display-5 text-primary mb-3"></i>
+        <h5 class="card-title">Write Tests in YAML</h5>
+        <p class="card-text text-muted">
+          Teachers define assessments in simple YAML files and import them with one click.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body text-center">
+        <i class="bi bi-broadcast display-5 text-success mb-3"></i>
+        <h5 class="card-title">Publish Online</h5>
+        <p class="card-text text-muted">
+          Publish assessments instantly. Students see them as soon as they sign in.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body text-center">
+        <i class="bi bi-bar-chart-fill display-5 text-warning mb-3"></i>
+        <h5 class="card-title">Instant Results</h5>
+        <p class="card-text text-muted">
+          Objective questions are auto-graded. Export results to CSV for your gradebook.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

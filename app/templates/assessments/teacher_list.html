@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Assessments – TextByte{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="fw-bold mb-0">My Assessments</h2>
+  <a href="{{ url_for('assessments.import_assessment') }}" class="btn btn-primary">
+    <i class="bi bi-upload me-1"></i>Import Assessment
+  </a>
+</div>
+
+{% if assessments %}
+  <div class="card shadow-sm">
+    <ul class="list-group list-group-flush">
+      {% for a in assessments %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <a href="{{ url_for('assessments.preview', assessment_id=a.id) }}"
+               class="fw-semibold text-decoration-none">{{ a.title }}</a>
+            <small class="text-muted ms-2">
+              {{ a.questions | length }} question(s)
+              &bull; {{ a.created_at.strftime('%d %b %Y') }}
+            </small>
+          </div>
+          <div class="d-flex gap-2 align-items-center">
+            {% if a.published %}
+              <span class="badge bg-success">Published</span>
+            {% else %}
+              <span class="badge bg-secondary">Draft</span>
+            {% endif %}
+            <a href="{{ url_for('assessments.results', assessment_id=a.id) }}"
+               class="btn btn-sm btn-outline-secondary">
+              <i class="bi bi-bar-chart"></i>
+            </a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% else %}
+  <div class="text-center py-5 text-muted">
+    <i class="bi bi-inbox display-1"></i>
+    <p class="mt-3">No assessments yet.</p>
+    <a href="{{ url_for('assessments.import_assessment') }}" class="btn btn-primary">
+      <i class="bi bi-upload me-1"></i>Import Assessment
+    </a>
+  </div>
+{% endif %}
+{% endblock %}
